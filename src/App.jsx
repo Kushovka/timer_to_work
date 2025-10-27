@@ -82,12 +82,12 @@ const App = () => {
     <div className="flex flex-col items-center justify-center h-screen gap-4">
       <div className="flex flex-col items-center justify-center">
         <div
-          className="relative w-[200px] h-[300px] border-4 rounded-[12px]"
+          className="relative sm:w-[200px] w-[150px] sm:h-[300px] h-[200px] border-4 rounded-[12px]"
           style={{ backgroundColor: bgColor }}
         >
           <img
             src={icon}
-            className={`absolute top-1/2 left-1/2 w-[60px] -translate-x-1/2 -translate-y-1/2 ${
+            className={`absolute top-1/2 left-1/2 sm:w-[60px] w-[40px] -translate-x-1/2 -translate-y-1/2 ${
               isBreak ? "animate-pulse" : ""
             }`}
             style={{ backgroundColor: bgColor }}
@@ -95,7 +95,7 @@ const App = () => {
           />
         </div>
 
-        <h1 className="text-[128px]">
+        <h1 className="sm:text-[128px] text-[96px]">
           {`${time.min.toString().padStart(2, "0")}:${time.sec
             .toString()
             .padStart(2, "0")}`}
@@ -108,18 +108,18 @@ const App = () => {
           : `Work ${workDuration} min...`}
       </h2>
 
-      <div className="flex gap-4">
+      <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
         <button
           onClick={() => startTimer(30)}
           disabled={isRun}
-          className="border px-4 py-2 rounded hover:bg-gray-200 transition-colors"
+          className="border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
         >
           start 30
         </button>
         <button
           onClick={() => startTimer(60)}
           disabled={isRun}
-          className="border px-4 py-2 rounded hover:bg-gray-200 transition-colors"
+          className="border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
         >
           start 60
         </button>
@@ -129,7 +129,7 @@ const App = () => {
           className={`border px-4 py-2 rounded transition-colors ${
             isBreak
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "hover:bg-gray-200"
+              : "hover:bg-gray-200/30"
           }`}
         >
           pause
@@ -140,7 +140,7 @@ const App = () => {
           className={`border px-4 py-2 rounded transition-colors ${
             isBreak
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "hover:bg-gray-200"
+              : "hover:bg-gray-200/30"
           }`}
         >
           reset
