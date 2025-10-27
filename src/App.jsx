@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import icon from "../public/light.png";
+import icon from "/light.png";
 
 const App = () => {
   const [time, setTime] = useState({ min: 0, sec: 0 });
@@ -18,7 +18,7 @@ const App = () => {
 
     const timer = setInterval(() => {
       setTime((prev) => {
-        const limit = mode === "work" ? workDuration : breakDuration;
+        const limit = mode === "work" ? workMins : breakDuration;
 
         if (prev.min === limit && prev.sec === 0) {
           clearInterval(timer);
@@ -27,12 +27,13 @@ const App = () => {
           if (mode === "work") {
             setMode("break");
             setTime({ min: 0, sec: 0 });
+            
             setTimeout(() => startTimer(workMins), 1000);
           } else {
+           
             setMode("work");
             setTime({ min: 0, sec: 0 });
           }
-
           return prev;
         }
 
@@ -76,6 +77,7 @@ const App = () => {
         );
 
   const bgColor = `rgb(${currentColor.join(",")})`;
+
   const isBreak = mode === "break";
 
   return (
@@ -111,21 +113,21 @@ const App = () => {
       <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
         <button
           onClick={() => startTimer(30)}
-          disabled={isRun}
+          disabled={isRun || isBreak}
           className="border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
         >
           start 30
         </button>
         <button
           onClick={() => startTimer(60)}
-          disabled={isRun}
+          disabled={isRun || isBreak}
           className="border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
         >
           start 60
         </button>
         <button
           onClick={pauseTimer}
-          disabled={isBreak}
+          disabled={isRun || isBreak}
           className={`border px-4 py-2 rounded transition-colors ${
             isBreak
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -136,7 +138,7 @@ const App = () => {
         </button>
         <button
           onClick={resetTimer}
-          disabled={isBreak}
+          disabled={isRun || isBreak}
           className={`border px-4 py-2 rounded transition-colors ${
             isBreak
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
