@@ -9,16 +9,19 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 400,
     height: 600,
+    frame: false,
+    transparent: true,
+    backgroundColor: "#00000000",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"), // пустой файл
     },
   });
 
   // Для разработки
-//   win.loadURL("http://localhost:5173");
+  win.loadURL("http://localhost:5173");
 
   // Для сборки
-  win.loadFile(path.join(__dirname, "dist", "index.html"));
+  // win.loadFile(path.resolve(__dirname, "dist", "index.html"));
 }
 
 app.on("ready", createWindow);

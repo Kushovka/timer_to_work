@@ -1,24 +1,30 @@
 import React, { useState } from "react";
-import icon from "/light.png";
+import icon from "./assets/light.png";
 
 const App = () => {
   const [time, setTime] = useState({ min: 0, sec: 0 });
   const [isRun, setIsRun] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
   const [mode, setMode] = useState("work");
   const [workDuration, setWorkDuration] = useState(30);
   const [breakDuration, setBreakDuration] = useState(5);
 
-  const startTimer = (workMins) => {
+  const startTimer = (workMins, resume = false) => {
     if (isRun) return;
 
-    setWorkDuration(workMins);
-    setBreakDuration(workMins === 30 ? 5 : 10);
-    setMode("work");
-    setTime({ min: 0, sec: 0 });
+    // если это не возобновление — сбрасываем значения
+    if (!resume) {
+      setWorkDuration(workMins);
+      setBreakDuration(workMins === 30 ? 5 : 10);
+      setMode("work");
+      setTime({ min: 0, sec: 0 });
+    }
+
+    setIsPaused(false);
 
     const timer = setInterval(() => {
       setTime((prev) => {
-        const limit = mode === "work" ? workMins : breakDuration;
+        const limit = mode === "work" ? workDuration : breakDuration;
 
         if (prev.min === limit && prev.sec === 0) {
           clearInterval(timer);
@@ -27,10 +33,10 @@ const App = () => {
           if (mode === "work") {
             setMode("break");
             setTime({ min: 0, sec: 0 });
-            
+
+            // запускаем перерыв
             setTimeout(() => startTimer(workMins), 1000);
           } else {
-           
             setMode("work");
             setTime({ min: 0, sec: 0 });
           }
@@ -47,13 +53,26 @@ const App = () => {
   };
 
   const pauseTimer = () => {
-    clearInterval(isRun);
-    setIsRun(null);
+    if (isRun) {
+      clearInterval(isRun);
+      setIsRun(null);
+      setIsPaused(true);
+    }
+  };
+
+  const resumeTimer = () => {
+    if (!isRun && isPaused) {
+      setIsPaused(false);
+      startTimer(workDuration, true);
+    }
   };
 
   const resetTimer = () => {
-    clearInterval(isRun);
+    if (isRun) {
+      clearInterval(isRun);
+    }
     setIsRun(null);
+    setIsPaused(false);
     setTime({ min: 0, sec: 0 });
     setMode("work");
   };
@@ -81,8 +100,8 @@ const App = () => {
   const isBreak = mode === "break";
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-4">
-      <div className="flex flex-col items-center justify-center">
+    <div className="drag flex flex-col items-center justify-center h-screen gap-4">
+      <div className="flex flex-col items-center justify-center bg-transparent">
         <div
           className="relative sm:w-[200px] w-[150px] sm:h-[300px] h-[200px] border-4 rounded-[12px]"
           style={{ backgroundColor: bgColor }}
@@ -97,53 +116,55 @@ const App = () => {
           />
         </div>
 
-        <h1 className="sm:text-[128px] text-[96px]">
+        <h1 className="sm:text-[128px] text-[96px] bg-transparent">
           {`${time.min.toString().padStart(2, "0")}:${time.sec
             .toString()
             .padStart(2, "0")}`}
         </h1>
       </div>
 
-      <h2 className="text-xl text-white/30">
+      <h2 className="text-xl text-white/30 bg-transparent">
         {isBreak
           ? `Chill ${breakDuration} min...`
           : `Work ${workDuration} min...`}
       </h2>
 
-      <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-4 grid-cols-2 gap-4 bg-transparent">
         <button
           onClick={() => startTimer(30)}
           disabled={isRun || isBreak}
-          className="border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
+          className="no-drag border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
         >
           start 30
         </button>
         <button
           onClick={() => startTimer(60)}
           disabled={isRun || isBreak}
-          className="border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
+          className="no-drag border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
         >
           start 60
         </button>
-        <button
-          onClick={pauseTimer}
-          disabled={isRun || isBreak}
-          className={`border px-4 py-2 rounded transition-colors ${
-            isBreak
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "hover:bg-gray-200/30"
-          }`}
-        >
-          pause
-        </button>
+
+        {!isPaused ? (
+          <button
+            onClick={pauseTimer}
+            disabled={!isRun}
+            className="no-drag border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
+          >
+            pause
+          </button>
+        ) : (
+          <button
+            onClick={resumeTimer}
+            className="no-drag border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
+          >
+            resume
+          </button>
+        )}
+
         <button
           onClick={resetTimer}
-          disabled={isRun || isBreak}
-          className={`border px-4 py-2 rounded transition-colors ${
-            isBreak
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "hover:bg-gray-200/30"
-          }`}
+          className="no-drag border px-4 py-2 rounded hover:bg-gray-200/30 transition-colors cursor-pointer"
         >
           reset
         </button>

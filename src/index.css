@@ -9,3 +9,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.drag {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+html,
+body,
+#root {
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: transparent;
+}
