@@ -1,6 +1,6 @@
 # 👉 **Timer App** — React + Tailwind CSS + Electron
 <br><br>
-
+![screen](./screenshots/header.png)
 <br><br>
 <div align="center">
 
