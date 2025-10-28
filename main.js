@@ -18,10 +18,10 @@ function createWindow() {
   });
 
   // Для разработки
-  win.loadURL("http://localhost:5173");
+  // win.loadURL("http://localhost:5173");
 
   // Для сборки
-  // win.loadFile(path.resolve(__dirname, "dist", "index.html"));
+  win.loadFile(path.resolve(__dirname, "dist", "index.html"));
 }
 
 app.on("ready", createWindow);
